@@ -1,7 +1,6 @@
 "use client";
 
-import type { JSX } from "react";
-import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 
 import { useScramble } from "../hooks/useScramble";
 import { resolveCharacterSet } from "../utils/presets";
@@ -19,42 +18,66 @@ export function TextScramble({
   preserveSpaces = true,
   preserveNumbers = false,
   preservePunctuation = true,
+  collapsedText,
+  expandedText,
   yoyo = false,
-  ...motionProps
+  startHidden = false,
+  once = false,
+  onAnimationComplete,
+  ...rest
 }: TextScrambleProps) {
-  const MotionComponent = motion.create(
-    Component as keyof JSX.IntrinsicElements,
-  );
-
   // Temporary: only support plain string children.
-  const text = typeof children === "string" ? children : String(children ?? "");
+  const isLogoMode = !!(collapsedText && expandedText);
+  const baseText = isLogoMode ? collapsedText : children;
+  const expanded = isLogoMode ? expandedText : children;
+
+  const [target, setTarget] = useState(baseText);
 
   const {
     text: scrambledText,
+    isFinished,
     restart,
     reverse,
   } = useScramble({
     from: "",
-    to: text,
+    to: target as string,
     duration,
     speed,
     delay,
-    trigger: trigger,
+    trigger,
     characterSet: resolveCharacterSet(characterSet),
     preserveSpaces,
     preserveNumbers,
     preservePunctuation,
+    startHidden,
+    once,
   });
+
+  // Fire onAnimationComplete when animation finishes
+  useEffect(() => {
+    if (isFinished && onAnimationComplete) {
+      onAnimationComplete();
+    }
+  }, [isFinished, onAnimationComplete]);
 
   const handleMouseEnter = () => {
     if (trigger === "hover") {
+      if (isLogoMode) {
+        setTarget(expanded);
+      }
       restart();
     }
   };
 
   const handleMouseLeave = () => {
-    if (trigger === "hover" && yoyo) {
-      restart();
+    if (trigger === "hover") {
+      if (isLogoMode) {
+        setTarget(baseText);
+      }
+
+      if (yoyo) {
+        reverse();
+      }
     }
   };
 
@@ -65,14 +88,14 @@ export function TextScramble({
   };
 
   return (
-    <MotionComponent
+    <Component
       className={className}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}
       onMouseLeave={handleMouseLeave}
-      {...motionProps}
+      {...rest}
     >
       {scrambledText}
-    </MotionComponent>
+    </Component>
   );
 }

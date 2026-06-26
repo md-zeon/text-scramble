@@ -74,6 +74,13 @@ export interface TextScrambleProps extends MotionProps {
   yoyo?: boolean;
 
   /**
+   * If true, the animation only plays once and ignores
+   * subsequent trigger events (hover/click/restart).
+   * @default false
+   */
+  once?: boolean;
+
+  /**
    * Character preset or custom string.
    */
   characterSet?: CharacterSetPreset | string;
@@ -120,9 +127,10 @@ export type RevealStrategy = "sequential" | "random";
 
 export interface GenerateFramesOptions {
   /**
-   * Starting text.
+   * Starting text. Empty string means start from a fully
+   * scrambled version of `to`.
    */
-  from: string;
+  from?: string;
 
   /**
    * Target text.
@@ -164,7 +172,42 @@ export type ScrambleFrame = string;
 
 export type ScrambleFrames = ScrambleFrame[];
 
-export interface UseScrambleOptions extends GenerateFramesOptions {
+export interface UseScrambleOptions {
+  /**
+   * Starting text.
+   * @default ""
+   */
+  from?: string;
+
+  /**
+   * Target text.
+   */
+  to: string;
+
+  /**
+   * Total animation duration in seconds.
+   */
+  duration: number;
+
+  /**
+   * Time between frame updates in seconds.
+   */
+  speed: number;
+
+  /**
+   * Character set to use while scrambling.
+   */
+  characterSet: string;
+
+  /**
+   * Reveal order.
+   */
+  revealStrategy?: RevealStrategy;
+
+  preserveSpaces: boolean;
+  preserveNumbers: boolean;
+  preservePunctuation: boolean;
+
   /**
    * Determines how the animation starts.
    *
@@ -178,6 +221,18 @@ export interface UseScrambleOptions extends GenerateFramesOptions {
    * @default 0
    */
   delay?: number;
+
+  /**
+   * If true, start with scrambled text instead of the original.
+   * @default false
+   */
+  startHidden?: boolean;
+
+  /**
+   * If true, the animation only plays once.
+   * @default false
+   */
+  once?: boolean;
 }
 
 export interface UseScrambleReturn {
@@ -190,6 +245,11 @@ export interface UseScrambleReturn {
    * Whether the animation is currently playing.
    */
   isPlaying: boolean;
+
+  /**
+   * Whether the animation has finished playing.
+   */
+  isFinished: boolean;
 
   play(): void;
 

@@ -68,9 +68,6 @@ export function generateFrames({
   preservePunctuation,
   preserveSpaces,
 }: GenerateFramesOptions): string[] {
-  // Reserved for future transitions (from → to)
-  void from;
-
   const preserveOptions: PreserveOptions = {
     preserveSpaces,
     preserveNumbers,
@@ -79,7 +76,13 @@ export function generateFrames({
 
   const frames: string[] = [];
 
-  frames.push(buildInitialFrame(to, characterSet, preserveOptions));
+  // If `from` is provided, use it as the starting frame.
+  // Otherwise scramble from the target text.
+  if (from && from.length > 0) {
+    frames.push(from);
+  } else {
+    frames.push(buildInitialFrame(to, characterSet, preserveOptions));
+  }
 
   for (let revealIndex = 0; revealIndex < to.length; revealIndex++) {
     frames.push(
