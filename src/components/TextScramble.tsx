@@ -47,10 +47,17 @@ export function TextScramble({
     }
   };
 
+  const handleClick = () => {
+    if (trigger === "click") {
+      restart();
+    }
+  };
+
   return (
     <MotionComponent
       className={className}
       onMouseEnter={handleMouseEnter}
+      onClick={handleClick}
       {...motionProps}
     >
       {scrambledText}

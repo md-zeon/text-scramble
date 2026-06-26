@@ -8,8 +8,8 @@ export default function App() {
         fontFamily: "monospace",
       }}
     >
-      <TextScramble as="h1" trigger="hover" duration={1} speed={0.05}>
-        Hover Me
+      <TextScramble as="h1" trigger="click" duration={1} speed={0.05}>
+        Click Me
       </TextScramble>
     </main>
   );
