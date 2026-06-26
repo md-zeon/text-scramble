@@ -153,3 +153,49 @@ export interface GenerateFramesOptions {
   preserveNumbers: boolean;
   preservePunctuation: boolean;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                               React Layer                                  */
+/* -------------------------------------------------------------------------- */
+
+export type TriggerMode = "mount" | "hover" | "click" | "manual";
+
+export type ScrambleFrame = string;
+
+export type ScrambleFrames = ScrambleFrame[];
+
+export interface UseScrambleOptions extends GenerateFramesOptions {
+  /**
+   * Determines how the animation starts.
+   *
+   * @default "mount"
+   */
+  trigger?: TriggerMode;
+
+  /**
+   * Delay before playback begins (milliseconds).
+   *
+   * @default 0
+   */
+  delay?: number;
+}
+
+export interface UseScrambleReturn {
+  /**
+   * Current text being displayed.
+   */
+  text: string;
+
+  /**
+   * Whether the animation is currently playing.
+   */
+  isPlaying: boolean;
+
+  play(): void;
+
+  pause(): void;
+
+  stop(): void;
+
+  restart(): void;
+}

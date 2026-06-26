@@ -72,3 +72,36 @@ Separating timing from generation makes the engine deterministic, easier to test
 ### Consequences
 
 The React hook is responsible for deciding when to display each generated frame.
+
+---
+
+## ADR-004 — Playback Controller
+
+The React hook is responsible for scheduling and playing generated frames.
+
+The engine never handles timing.
+
+---
+
+## ADR-005 — Trigger Modes
+
+### Status
+
+Accepted
+
+### Decision
+
+Triggering animations is represented by a string-based mode rather than a boolean.
+
+Supported modes:
+
+- mount
+- hover
+- click
+- manual
+
+### Why
+
+A boolean cannot naturally represent multiple activation strategies.
+
+Using a trigger mode allows the API to grow without introducing breaking changes.

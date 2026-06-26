@@ -19,7 +19,8 @@
 
 ## React
 
-- [ ] useScramble
+- [x] Hook API Design
+- [ ] Hook Implementation
 - [ ] TextScramble Component
 - [ ] Rich Text Support
 
