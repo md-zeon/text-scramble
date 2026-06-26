@@ -1,18 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { generateFrames } from "../core/scramble";
 import type { UseScrambleOptions, UseScrambleReturn } from "../types";
 
 export function useScramble({
-  trigger,
-  delay,
-  speed,
+  trigger = "mount",
+  delay = 0,
+  speed = 0.04,
   ...options
 }: UseScrambleOptions): UseScrambleReturn {
-  // Reserved for future steps.
-  void trigger;
-  void delay;
-
   const frames = useMemo(
     () =>
       generateFrames({
@@ -22,8 +18,8 @@ export function useScramble({
     [
       options.from,
       options.to,
-      options.characterSet,
       options.duration,
+      options.characterSet,
       options.preserveNumbers,
       options.preservePunctuation,
       options.preserveSpaces,
@@ -32,33 +28,72 @@ export function useScramble({
   );
 
   const [frameIndex, setFrameIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(trigger === "mount");
+
+  const timeoutRef = useRef<number | null>(null);
 
   const text = frames[frameIndex] ?? options.to;
 
+  const clear = () => {
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
   useEffect(() => {
-    // Stop once we've reached the final frame.
+    clear();
+
+    if (!isPlaying) return;
+
     if (frameIndex >= frames.length - 1) {
+      setIsPlaying(false);
       return;
     }
 
-    const timeout = window.setTimeout(() => {
-      setFrameIndex((current) => current + 1);
-    }, speed * 1000);
+    timeoutRef.current = window.setTimeout(
+      () => {
+        setFrameIndex((prev) => prev + 1);
+      },
+      frameIndex === 0 ? delay : speed * 1000,
+    );
 
-    return () => clearTimeout(timeout);
-  }, [frameIndex, frames.length, speed]);
+    return clear;
+  }, [delay, frameIndex, frames.length, isPlaying, speed]);
+
+  useEffect(() => {
+    return clear;
+  }, []);
+
+  const play = useCallback(() => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+  }, [isPlaying]);
+
+  const pause = useCallback(() => {
+    clear();
+    setIsPlaying(false);
+  }, []);
+
+  const stop = useCallback(() => {
+    clear();
+    setIsPlaying(false);
+    setFrameIndex(0);
+  }, []);
+
+  const restart = useCallback(() => {
+    clear();
+    setFrameIndex(0);
+    setIsPlaying(true);
+  }, []);
 
   return {
     text,
-
-    isPlaying: frameIndex < frames.length - 1,
-
-    play() {},
-
-    pause() {},
-
-    stop() {},
-
-    restart() {},
+    isPlaying,
+    play,
+    pause,
+    stop,
+    restart,
   };
 }

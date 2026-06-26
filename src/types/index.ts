@@ -60,7 +60,7 @@ export interface TextScrambleProps extends MotionProps {
    * Animation mode.
    * @default "mount"
    */
-  mode?: TextScrambleMode;
+  trigger?: TextScrambleMode;
 
   /**
    * Start with scrambled text instead of the original.
@@ -69,7 +69,7 @@ export interface TextScrambleProps extends MotionProps {
 
   /**
    * Reverse animation on mouse leave.
-   * Only valid when mode="hover".
+   * Only valid when trigger="hover".
    */
   yoyo?: boolean;
 
