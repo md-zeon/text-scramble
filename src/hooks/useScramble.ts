@@ -41,6 +41,9 @@ export function useScramble({
   // scrambled text, giving a "normal text → scramble → reveal" effect.
   const [hasStarted, setHasStarted] = useState(false);
 
+  // Track whether the initial delay has been applied (only once).
+  const initialDelayApplied = useRef(false);
+
   // Track whether the animation has ever completed (for `once`).
   const hasCompletedOnce = useRef(false);
 
@@ -69,8 +72,12 @@ export function useScramble({
 
     if (!isPlaying) return;
 
-    // Always schedule the next timeout when effect runs.
-    // The timeout callback checks if this was the last frame.
+    // Apply the initial delay only once on the very first tick.
+    // delay is in seconds, setTimeout expects milliseconds.
+    const delayMs =
+      !initialDelayApplied.current ? delay * 1000 : 0;
+    initialDelayApplied.current = true;
+
     timeoutRef.current = window.setTimeout(
       () => {
         const nextIndex =
@@ -93,7 +100,7 @@ export function useScramble({
           setFrameIndex(nextIndex);
         }
       },
-      frameIndex === 0 ? delay : speed * 1000,
+      delayMs || speed * 1000,
     );
 
     return clear;
@@ -106,6 +113,9 @@ export function useScramble({
   const play = useCallback(() => {
     if (isPlaying) return;
     if (once && hasCompletedOnce.current) return;
+
+    // Reset delay tracker so the next mount-style play respects delay
+    initialDelayApplied.current = false;
 
     setHasStarted(true);
     setIsFinished(false);
@@ -130,6 +140,9 @@ export function useScramble({
 
     clear();
 
+    // Reset delay tracker so re-triggers (hover/click) respect delay
+    initialDelayApplied.current = false;
+
     setHasStarted(true);
     setIsFinished(false);
     setDirection("forward");
@@ -141,6 +154,8 @@ export function useScramble({
     if (once && hasCompletedOnce.current) return;
 
     clear();
+
+    initialDelayApplied.current = false;
 
     setHasStarted(true);
     setIsFinished(false);

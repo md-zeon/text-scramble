@@ -51,7 +51,7 @@ export interface TextScrambleProps extends MotionProps {
   speed?: number;
 
   /**
-   * Delay before animation starts.
+   * Delay before animation starts in seconds.
    * @default 0
    */
   delay?: number;
@@ -104,14 +104,17 @@ export interface TextScrambleProps extends MotionProps {
   preserveNumbers?: boolean;
 
   /**
-   * Logo expansion mode.
+   * Text to show before animation triggers.
+   * When combined with `revealText`, the component animates
+   * between these two values (e.g., "TS" → "TEXT SCRAMBLE").
    */
-  collapsedText?: string;
+  initialText?: string;
 
   /**
-   * Expanded logo text.
+   * Text to reveal after animation completes.
+   * Must be used together with `initialText`.
    */
-  expandedText?: string;
+  revealText?: string;
 
   /**
    * Called after animation completes.
@@ -216,7 +219,7 @@ export interface UseScrambleOptions {
   trigger?: TriggerMode;
 
   /**
-   * Delay before playback begins (milliseconds).
+   * Delay before playback begins in seconds.
    *
    * @default 0
    */

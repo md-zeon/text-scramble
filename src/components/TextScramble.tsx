@@ -18,18 +18,19 @@ export function TextScramble({
   preserveSpaces = true,
   preserveNumbers = false,
   preservePunctuation = true,
-  collapsedText,
-  expandedText,
+  initialText,
+  revealText,
   yoyo = false,
   startHidden = false,
   once = false,
   onAnimationComplete,
   ...rest
 }: TextScrambleProps) {
-  // Temporary: only support plain string children.
-  const isLogoMode = !!(collapsedText && expandedText);
-  const baseText = isLogoMode ? collapsedText : children;
-  const expanded = isLogoMode ? expandedText : children;
+  // Toggle mode: if both initialText and revealText are provided,
+  // the component switches between them on trigger events.
+  const isToggleMode = !!(initialText && revealText);
+  const baseText = isToggleMode ? initialText : children;
+  const expanded = isToggleMode ? revealText : children;
 
   const [target, setTarget] = useState(baseText);
 
@@ -62,7 +63,7 @@ export function TextScramble({
 
   const handleMouseEnter = () => {
     if (trigger === "hover") {
-      if (isLogoMode) {
+      if (isToggleMode) {
         setTarget(expanded);
       }
       restart();
@@ -71,7 +72,7 @@ export function TextScramble({
 
   const handleMouseLeave = () => {
     if (trigger === "hover") {
-      if (isLogoMode) {
+      if (isToggleMode) {
         setTarget(baseText);
       }
 

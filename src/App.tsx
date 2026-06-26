@@ -13,20 +13,18 @@ export default function App() {
         margin: "0 auto",
       }}
     >
-      <h1 style={{ fontSize: 28, marginBottom: 40 }}>
-        Text Scramble Demos
-      </h1>
+      <h1 style={{ fontSize: 28, marginBottom: 40 }}>Text Scramble Demos</h1>
 
       {/* ---- 1. Mount Trigger (default) ---- */}
       <Section title="1. Mount Trigger (default)">
-        <TextScramble>
+        <TextScramble delay={1} duration={5}>
           This text scrambles on mount automatically.
         </TextScramble>
       </Section>
 
       {/* ---- 2. Hover Trigger ---- */}
       <Section title="2. Hover Trigger">
-        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
+        <TextScramble delay={2} trigger="hover" style={{ cursor: "pointer" }}>
           Hover over me to scramble!
         </TextScramble>
       </Section>
@@ -47,29 +45,41 @@ export default function App() {
 
       {/* ---- 5. Custom character sets ---- */}
       <Section title="5. Binary Character Set">
-        <TextScramble characterSet="binary" trigger="hover" style={{ cursor: "pointer" }}>
+        <TextScramble
+          characterSet="binary"
+          trigger="hover"
+          style={{ cursor: "pointer" }}
+        >
           Binary scramble
         </TextScramble>
       </Section>
 
       <Section title="6. Hex Character Set">
-        <TextScramble characterSet="hex" trigger="hover" style={{ cursor: "pointer" }}>
+        <TextScramble
+          characterSet="hex"
+          trigger="hover"
+          style={{ cursor: "pointer" }}
+        >
           Hex Scramble
         </TextScramble>
       </Section>
 
       <Section title="7. Symbols Character Set">
-        <TextScramble characterSet="symbols" trigger="hover" style={{ cursor: "pointer" }}>
+        <TextScramble
+          characterSet="symbols"
+          trigger="hover"
+          style={{ cursor: "pointer" }}
+        >
           Symbol Scramble
         </TextScramble>
       </Section>
 
-      {/* ---- 8. Logo Expansion Mode ---- */}
-      <Section title="8. Logo Expansion Mode (collapsedText / expandedText)">
+      {/* ---- 8. Toggle Mode (initialText / revealText) ---- */}
+      <Section title="8. Toggle Mode (initialText / revealText)">
         <TextScramble
           trigger="hover"
-          collapsedText="TS"
-          expandedText="TEXT SCRAMBLE"
+          initialText="TS"
+          revealText="TEXT SCRAMBLE"
           yoyo
           style={{ cursor: "pointer", fontWeight: "bold", fontSize: 20 }}
         />
@@ -77,25 +87,29 @@ export default function App() {
 
       {/* ---- 9. startHidden ---- */}
       <Section title="9. startHidden (shows scrambled initially)">
-        <TextScramble
-          trigger="hover"
-          startHidden
-          style={{ cursor: "pointer" }}
-        >
+        <TextScramble trigger="hover" startHidden style={{ cursor: "pointer" }}>
           Hover to reveal me!
         </TextScramble>
       </Section>
 
       {/* ---- 10. Click + once ---- */}
       <Section title="10. Click + once (plays once then ignores clicks)">
-        <TextScramble trigger="click" once style={{ cursor: "pointer", color: "#c0392b" }}>
+        <TextScramble
+          trigger="click"
+          once
+          style={{ cursor: "pointer", color: "#c0392b" }}
+        >
           Click me only works ONCE!
         </TextScramble>
       </Section>
 
       {/* ---- 11. Hover + once ---- */}
       <Section title="11. Hover + once (first hover only)">
-        <TextScramble trigger="hover" once style={{ cursor: "pointer", color: "#27ae60" }}>
+        <TextScramble
+          trigger="hover"
+          once
+          style={{ cursor: "pointer", color: "#27ae60" }}
+        >
           Hover works only the first time!
         </TextScramble>
       </Section>
@@ -162,7 +176,13 @@ export default function App() {
 /*                                  Section                                   */
 /* -------------------------------------------------------------------------- */
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <section style={{ marginBottom: 36 }}>
       <h2 style={{ fontSize: 16, marginBottom: 8, color: "#555" }}>{title}</h2>
