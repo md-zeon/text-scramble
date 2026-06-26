@@ -28,7 +28,11 @@ export function TextScramble({
   // Temporary: only support plain string children.
   const text = typeof children === "string" ? children : String(children ?? "");
 
-  const { text: scrambledText, restart } = useScramble({
+  const {
+    text: scrambledText,
+    restart,
+    reverse,
+  } = useScramble({
     from: "",
     to: text,
     duration,

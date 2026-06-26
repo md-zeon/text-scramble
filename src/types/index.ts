@@ -198,4 +198,6 @@ export interface UseScrambleReturn {
   stop(): void;
 
   restart(): void;
+
+  reverse(): void;
 }

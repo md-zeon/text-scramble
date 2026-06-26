@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { generateFrames } from "../core/scramble";
 import type { UseScrambleOptions, UseScrambleReturn } from "../types";
 
+type PlaybackDirection = "forward" | "backward";
+
 export function useScramble({
   trigger = "mount",
   delay = 0,
@@ -29,6 +31,7 @@ export function useScramble({
 
   const [frameIndex, setFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(trigger === "mount");
+  const [direction, setDirection] = useState<PlaybackDirection>("forward");
 
   const timeoutRef = useRef<number | null>(null);
 
@@ -46,20 +49,27 @@ export function useScramble({
 
     if (!isPlaying) return;
 
-    if (frameIndex >= frames.length - 1) {
+    const reachedEnd =
+      direction === "forward"
+        ? frameIndex >= frames.length - 1
+        : frameIndex <= 0;
+
+    if (reachedEnd) {
       setIsPlaying(false);
       return;
     }
 
     timeoutRef.current = window.setTimeout(
       () => {
-        setFrameIndex((prev) => prev + 1);
+        setFrameIndex((prev) =>
+          direction === "forward" ? prev + 1 : prev - 1,
+        );
       },
       frameIndex === 0 ? delay : speed * 1000,
     );
 
     return clear;
-  }, [delay, frameIndex, frames.length, isPlaying, speed]);
+  }, [delay, frameIndex, frames.length, direction, isPlaying, speed]);
 
   useEffect(() => {
     return clear;
@@ -68,6 +78,7 @@ export function useScramble({
   const play = useCallback(() => {
     if (isPlaying) return;
 
+    setDirection("forward");
     setIsPlaying(true);
   }, [isPlaying]);
 
@@ -84,9 +95,19 @@ export function useScramble({
 
   const restart = useCallback(() => {
     clear();
+
+    setDirection("forward");
     setFrameIndex(0);
     setIsPlaying(true);
   }, []);
+
+  const reverse = useCallback(() => {
+    clear();
+
+    setDirection("backward");
+    setFrameIndex(frames.length - 1);
+    setIsPlaying(true);
+  }, [frames.length]);
 
   return {
     text,
@@ -95,5 +116,6 @@ export function useScramble({
     pause,
     stop,
     restart,
+    reverse,
   };
 }
