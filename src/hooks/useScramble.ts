@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { generateFrames } from "../core/scramble";
 import type { UseScrambleOptions, UseScrambleReturn } from "../types";
@@ -31,14 +31,27 @@ export function useScramble({
     ],
   );
 
-  const [frameIndex] = useState(0);
+  const [frameIndex, setFrameIndex] = useState(0);
 
   const text = frames[frameIndex] ?? options.to;
+
+  useEffect(() => {
+    // Stop once we've reached the final frame.
+    if (frameIndex >= frames.length - 1) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setFrameIndex((current) => current + 1);
+    }, speed * 1000);
+
+    return () => clearTimeout(timeout);
+  }, [frameIndex, frames.length, speed]);
 
   return {
     text,
 
-    isPlaying: false,
+    isPlaying: frameIndex < frames.length - 1,
 
     play() {},
 
