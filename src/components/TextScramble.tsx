@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useScramble } from "../hooks/useScramble";
 import { resolveCharacterSet } from "../utils/presets";
+import { extractText, replaceText, renderTree } from "../utils/rich-text";
 import type { TextScrambleProps } from "../types";
+import type { ScrambledNode } from "../utils/rich-text";
 
 export function TextScramble({
   children,
@@ -29,10 +31,24 @@ export function TextScramble({
   // Toggle mode: if both initialText and revealText are provided,
   // the component switches between them on trigger events.
   const isToggleMode = !!(initialText && revealText);
-  const baseText = isToggleMode ? initialText : children;
-  const expanded = isToggleMode ? revealText : children;
 
-  const [target, setTarget] = useState(baseText);
+  // Determine if children contain rich elements (not just plain text)
+  const isRichText = !isToggleMode && !isPlainString(children);
+
+  // If it's rich text, extract the text and tree structure
+  const richTextInfo = useMemo(() => {
+    if (!isRichText) return null;
+    return extractText(children);
+  }, [children, isRichText]);
+
+  // The plain text target for the scramble engine
+  const scrambleTarget = isRichText
+    ? (richTextInfo?.text ?? "")
+    : isToggleMode
+      ? (revealText ?? "")
+      : typeof children === "string" || typeof children === "number"
+        ? String(children)
+        : "";
 
   const {
     text: scrambledText,
@@ -41,7 +57,7 @@ export function TextScramble({
     reverse,
   } = useScramble({
     from: "",
-    to: target as string,
+    to: scrambleTarget,
     duration,
     speed,
     delay,
@@ -63,19 +79,12 @@ export function TextScramble({
 
   const handleMouseEnter = () => {
     if (trigger === "hover") {
-      if (isToggleMode) {
-        setTarget(expanded);
-      }
       restart();
     }
   };
 
   const handleMouseLeave = () => {
     if (trigger === "hover") {
-      if (isToggleMode) {
-        setTarget(baseText);
-      }
-
       if (yoyo) {
         reverse();
       }
@@ -88,6 +97,18 @@ export function TextScramble({
     }
   };
 
+  // Render the content: for rich text we rebuild the tree, otherwise plain text
+  const renderedContent = useMemo(() => {
+    if (isRichText && richTextInfo) {
+      const clonedTree: ScrambledNode[] = JSON.parse(
+        JSON.stringify(richTextInfo.tree),
+      );
+      replaceText(clonedTree, scrambledText);
+      return renderTree(clonedTree);
+    }
+    return scrambledText;
+  }, [isRichText, richTextInfo, scrambledText]);
+
   return (
     <Component
       className={className}
@@ -96,7 +117,19 @@ export function TextScramble({
       onMouseLeave={handleMouseLeave}
       {...rest}
     >
-      {scrambledText}
+      {renderedContent}
     </Component>
+  );
+}
+
+/**
+ * Returns true if a ReactNode is a plain string or number.
+ */
+function isPlainString(node: React.ReactNode): boolean {
+  return (
+    typeof node === "string" ||
+    typeof node === "number" ||
+    node == null ||
+    typeof node === "boolean"
   );
 }

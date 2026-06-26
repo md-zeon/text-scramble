@@ -41,9 +41,6 @@ export function useScramble({
   // scrambled text, giving a "normal text → scramble → reveal" effect.
   const [hasStarted, setHasStarted] = useState(false);
 
-  // Track whether the initial delay has been applied (only once).
-  const initialDelayApplied = useRef(false);
-
   // Track whether the animation has ever completed (for `once`).
   const hasCompletedOnce = useRef(false);
 
@@ -72,11 +69,10 @@ export function useScramble({
 
     if (!isPlaying) return;
 
-    // Apply the initial delay only once on the very first tick.
-    // delay is in seconds, setTimeout expects milliseconds.
-    const delayMs =
-      !initialDelayApplied.current ? delay * 1000 : 0;
-    initialDelayApplied.current = true;
+    const isFirstForwardTick =
+      direction === "forward" && frameIndex === 0 && !hasStarted;
+
+    const ms = isFirstForwardTick ? delay * 1000 : speed * 1000;
 
     timeoutRef.current = window.setTimeout(
       () => {
@@ -91,7 +87,7 @@ export function useScramble({
           setIsPlaying(false);
           setIsFinished(true);
           hasCompletedOnce.current = true;
-        } else if (!hasStarted && nextIndex === 1 && direction === "forward") {
+        } else if (isFirstForwardTick) {
           // First tick: switch from showing the final text to showing
           // the initial scrambled frame so the user sees "scramble on top".
           setHasStarted(true);
@@ -100,7 +96,7 @@ export function useScramble({
           setFrameIndex(nextIndex);
         }
       },
-      delayMs || speed * 1000,
+      ms,
     );
 
     return clear;
@@ -113,9 +109,6 @@ export function useScramble({
   const play = useCallback(() => {
     if (isPlaying) return;
     if (once && hasCompletedOnce.current) return;
-
-    // Reset delay tracker so the next mount-style play respects delay
-    initialDelayApplied.current = false;
 
     setHasStarted(true);
     setIsFinished(false);
@@ -140,10 +133,7 @@ export function useScramble({
 
     clear();
 
-    // Reset delay tracker so re-triggers (hover/click) respect delay
-    initialDelayApplied.current = false;
-
-    setHasStarted(true);
+    setHasStarted(false);
     setIsFinished(false);
     setDirection("forward");
     setFrameIndex(0);
@@ -155,8 +145,7 @@ export function useScramble({
 
     clear();
 
-    initialDelayApplied.current = false;
-
+    // Don't set hasStarted=false — reverse always shows frames
     setHasStarted(true);
     setIsFinished(false);
     setDirection("backward");

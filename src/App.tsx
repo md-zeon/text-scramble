@@ -15,16 +15,67 @@ export default function App() {
     >
       <h1 style={{ fontSize: 28, marginBottom: 40 }}>Text Scramble Demos</h1>
 
+      {/* ---- 0. Delay test ---- */}
+      <Section title="0. Delay test (2s delay, hover)">
+        <TextScramble
+          trigger="hover"
+          delay={2}
+          style={{ cursor: "pointer", color: "#e67e22" }}
+        >
+          Hover me — waits 2 seconds before scrambling
+        </TextScramble>
+      </Section>
+
+      {/* ---- Rich text: styled elements ---- */}
+      <Section title="17. Rich text — bold & italic">
+        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
+          This is <strong>bold</strong> and <em>italic</em> text
+        </TextScramble>
+      </Section>
+
+      <Section title="18. Rich text — inline elements">
+        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
+          Visit <a href="#" style={{ color: "#3498db" }}>our website</a> for more
+        </TextScramble>
+      </Section>
+
+      <Section title="19. Rich text — nested elements">
+        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
+          <span style={{ color: "#9b59b6" }}>
+            Nested <strong>span with <em>emphasis</em></strong>
+          </span>
+        </TextScramble>
+      </Section>
+
+      <Section title="20. Rich text — multiple children">
+        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
+          <span style={{ background: "#f0f0f0", padding: "0 4px" }}>
+            Styled span
+          </span>{" "}
+          and plain text together
+        </TextScramble>
+      </Section>
+
+      <Section title="21. Rich text + once">
+        <TextScramble
+          trigger="hover"
+          once
+          style={{ cursor: "pointer", color: "#c0392b" }}
+        >
+          <strong>Rich text</strong> hover <em>works only once</em>
+        </TextScramble>
+      </Section>
+
       {/* ---- 1. Mount Trigger (default) ---- */}
       <Section title="1. Mount Trigger (default)">
-        <TextScramble delay={1} duration={5}>
+        <TextScramble>
           This text scrambles on mount automatically.
         </TextScramble>
       </Section>
 
       {/* ---- 2. Hover Trigger ---- */}
       <Section title="2. Hover Trigger">
-        <TextScramble delay={2} trigger="hover" style={{ cursor: "pointer" }}>
+        <TextScramble trigger="hover" style={{ cursor: "pointer" }}>
           Hover over me to scramble!
         </TextScramble>
       </Section>
