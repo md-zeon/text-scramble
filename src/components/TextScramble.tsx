@@ -19,6 +19,7 @@ export function TextScramble({
   preserveSpaces = true,
   preserveNumbers = false,
   preservePunctuation = true,
+  yoyo = false,
   ...motionProps
 }: TextScrambleProps) {
   const MotionComponent = motion.create(
@@ -51,6 +52,12 @@ export function TextScramble({
     }
   };
 
+  const handleMouseLeave = () => {
+    if (trigger === "hover" && yoyo) {
+      restart();
+    }
+  };
+
   const handleClick = () => {
     if (trigger === "click") {
       restart();
@@ -62,6 +69,7 @@ export function TextScramble({
       className={className}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}
+      onMouseLeave={handleMouseLeave}
       {...motionProps}
     >
       {scrambledText}

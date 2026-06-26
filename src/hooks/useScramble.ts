@@ -32,6 +32,7 @@ export function useScramble({
   const [frameIndex, setFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(trigger === "mount");
   const [direction, setDirection] = useState<PlaybackDirection>("forward");
+  const [isFinished, setIsFinished] = useState(false);
 
   const timeoutRef = useRef<number | null>(null);
 
@@ -56,6 +57,7 @@ export function useScramble({
 
     if (reachedEnd) {
       setIsPlaying(false);
+      setIsFinished(true);
       return;
     }
 
@@ -77,7 +79,7 @@ export function useScramble({
 
   const play = useCallback(() => {
     if (isPlaying) return;
-
+    setIsFinished(false);
     setDirection("forward");
     setIsPlaying(true);
   }, [isPlaying]);
@@ -103,7 +105,7 @@ export function useScramble({
 
   const reverse = useCallback(() => {
     clear();
-
+    setIsFinished(false);
     setDirection("backward");
     setFrameIndex(frames.length - 1);
     setIsPlaying(true);
