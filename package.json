@@ -1,19 +1,42 @@
 {
-  "name": "text-scramble",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@md-zeon/react-text-scramble",
+  "version": "0.1.0",
+  "description": "A lightweight React text scramble animation component with rich text support",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "text-scramble",
+    "scramble",
+    "animation",
+    "text-animation",
+    "rich-text",
+    "react-component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/md-zeon/text-scramble.git"
+  },
+  "homepage": "https://github.com/md-zeon/text-scramble#readme",
+  "bugs": {
+    "url": "https://github.com/md-zeon/text-scramble/issues"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "motion": "^12.42.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -27,6 +50,7 @@
     "globals": "^17.6.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.61.0",
-    "vite": "^8.1.0"
+    "vite": "^8.1.0",
+    "vite-plugin-dts": "^4.5.3"
   }
 }

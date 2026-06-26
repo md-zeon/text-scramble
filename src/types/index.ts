@@ -1,5 +1,4 @@
-import type { MotionProps } from "motion/react";
-import type { ElementType, ReactNode } from "react";
+import type { ElementType, ReactNode, HTMLAttributes } from "react";
 
 /* -------------------------------------------------------------------------- */
 /*                               Trigger Mode                                 */
@@ -24,7 +23,7 @@ export type CharacterSetPreset =
 /*                               Public Props                                 */
 /* -------------------------------------------------------------------------- */
 
-export interface TextScrambleProps extends MotionProps {
+export interface TextScrambleProps extends HTMLAttributes<HTMLElement> {
   /**
    * Rich text support.
    */

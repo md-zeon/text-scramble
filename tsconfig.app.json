@@ -27,7 +27,6 @@
     "src/utils",
     "src/hooks",
     "src/core",
-    "components",
     "src/types"
   ]
 }
