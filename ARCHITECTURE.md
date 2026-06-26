@@ -50,3 +50,25 @@ This enables:
 ### Consequences
 
 The React hook is responsible for playing the frames over time.
+
+---
+
+## ADR-003 — Frame Generation is Time Independent
+
+### Status
+
+Accepted
+
+### Decision
+
+The frame generation engine is responsible only for producing animation frames.
+
+It does not know about timing, intervals, requestAnimationFrame, or React.
+
+### Why
+
+Separating timing from generation makes the engine deterministic, easier to test, and reusable across different rendering environments.
+
+### Consequences
+
+The React hook is responsible for deciding when to display each generated frame.

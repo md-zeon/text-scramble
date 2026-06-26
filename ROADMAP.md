@@ -14,7 +14,7 @@
 - [x] Random Utilities
 - [x] Character Utilities
 - [x] Frame Generator API
-- [ ] Frame Generator Implementation
+- [x] Frame Generator Implementation
 - [ ] Reveal Strategies
 
 ## React
