@@ -111,3 +111,45 @@ export interface TextScrambleProps extends MotionProps {
    */
   onAnimationComplete?: () => void;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                              Frame Generation                              */
+/* -------------------------------------------------------------------------- */
+
+export type RevealStrategy = "sequential" | "random";
+
+export interface GenerateFramesOptions {
+  /**
+   * Starting text.
+   */
+  from: string;
+
+  /**
+   * Target text.
+   */
+  to: string;
+
+  /**
+   * Total animation duration in seconds.
+   */
+  duration: number;
+
+  /**
+   * Time between frame updates in seconds.
+   */
+  speed: number;
+
+  /**
+   * Character set to use while scrambling.
+   */
+  characterSet: string;
+
+  /**
+   * Reveal order.
+   */
+  revealStrategy?: RevealStrategy;
+
+  preserveSpaces: boolean;
+  preserveNumbers: boolean;
+  preservePunctuation: boolean;
+}

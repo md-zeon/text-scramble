@@ -8,10 +8,13 @@
 
 ## Core
 
+## Core
+
 - [x] Character Presets
 - [x] Random Utilities
 - [x] Character Utilities
-- [ ] Frame Generator
+- [x] Frame Generator API
+- [ ] Frame Generator Implementation
 - [ ] Reveal Strategies
 
 ## React

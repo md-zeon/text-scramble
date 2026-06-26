@@ -24,3 +24,29 @@ This allows:
 ### Consequences
 
 The React hook and component will only consume the engine.
+
+---
+
+## ADR-002 — Frame Generation
+
+### Status
+
+Accepted
+
+### Decision
+
+The scramble engine generates the complete animation as an array of frames instead of producing one frame at a time.
+
+### Why
+
+This enables:
+
+- Replay animations
+- Reverse (yoyo) animations
+- Logo expansion
+- Easier testing
+- Deterministic output
+
+### Consequences
+
+The React hook is responsible for playing the frames over time.
