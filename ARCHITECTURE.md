@@ -105,3 +105,83 @@ Supported modes:
 A boolean cannot naturally represent multiple activation strategies.
 
 Using a trigger mode allows the API to grow without introducing breaking changes.
+
+---
+
+## ADR-006 — `once` Property
+
+### Status
+
+Accepted
+
+### Decision
+
+The animation system supports a `once` flag that limits the animation to a single playback.
+
+### Why
+
+Prevents repetitive or distracting animations on interactive elements. Once the animation plays to completion once (on mount, hover, or click), all subsequent trigger events are silently ignored.
+
+### Consequences
+
+The hook tracks completion state via a `useRef(hasCompletedOnce)`. Each control method (`play`, `restart`, `reverse`) checks this ref before initiating playback.
+
+---
+
+## ADR-007 — Start Hidden
+
+### Status
+
+Accepted
+
+### Decision
+
+The component supports a `startHidden` prop that starts the text in its scrambled state.
+
+### Why
+
+Provides a "Hover to reveal" user experience where the content is initially hidden behind scrambled characters and only revealed when the animation triggers.
+
+### Consequences
+
+When `startHidden=true` and the animation hasn't started yet, the displayed text is the first scrambled frame (`frames[0]`) instead of the final target text.
+
+---
+
+## ADR-008 — `onAnimationComplete` Callback
+
+### Status
+
+Accepted
+
+### Decision
+
+The hook exposes an `isFinished` state, and the component calls an optional `onAnimationComplete` callback when the animation reaches its final frame.
+
+### Why
+
+Allows consumers to chain actions after the scramble animation completes (e.g., play a sound, navigate, show a tooltip).
+
+### Consequences
+
+A `useEffect` in `TextScramble` watches `isFinished` and invokes the callback. The callback is called once per completion and does not fire on re-renders.
+
+---
+
+## ADR-009 — Animation Flow (Normal → Scramble → Reveal)
+
+### Status
+
+Accepted
+
+### Decision
+
+The default animation flow displays the original text first, then replaces it with scrambled characters, and finally reveals the target text character by character.
+
+### Why
+
+This creates a visually striking "glitch-in" effect where the user sees the original text, then it corrupts, then it resolves — rather than starting from a scrambled state which can be confusing.
+
+### Consequences
+
+The hook uses a `hasStarted` flag that starts as `false`. While `false`, the displayed text is the final target (`options.to`). On the first animation tick, `hasStarted` flips to `true` and the frame index resets to `0`, causing the scrambled frame to appear. Subsequent ticks advance through the reveal sequence.

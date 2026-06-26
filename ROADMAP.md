@@ -8,30 +8,37 @@
 
 ## Core
 
-## Core
-
 - [x] Character Presets
 - [x] Random Utilities
 - [x] Character Utilities
 - [x] Frame Generator API
 - [x] Frame Generator Implementation
-- [ ] Reveal Strategies
+- [x] Frame generator respects `from` parameter
+- [ ] Reveal Strategies (random mode)
 
 ## React
 
 - [x] Hook API Design
-- [ ] Hook Implementation
-- [ ] TextScramble Component
+- [x] Hook Implementation
+- [x] TextScramble Component
+- [x] Fixed `restart()` not setting `hasStarted` (click/hover now work)
 - [ ] Rich Text Support
 
 ## Features
 
-- [ ] Hover Mode
-- [ ] Click Mode
-- [ ] Manual Mode
-- [ ] Logo Expansion
-- [ ] Start Hidden
-- [ ] Yoyo
+- [x] Mount Mode
+- [x] Hover Mode
+- [x] Click Mode
+- [x] Manual Mode
+- [x] Logo Expansion (collapsedText / expandedText)
+- [x] Start Hidden
+- [x] Yoyo (reverse on leave)
+- [x] `once` property (single-playback limit)
+- [x] `onAnimationComplete` callback
+
+## Animation Flow
+
+- [x] Normal → Scramble → Reveal (instead of starting scrambled)
 
 ## Publish
 
