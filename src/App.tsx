@@ -1,14 +1,22 @@
+import { shouldPreserveCharacter } from "./core/characters";
+
 export default function App() {
+  const text = "Hello, World! 2026";
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <h1>Text Scramble Playground</h1>
-    </main>
+    <pre>
+      {text
+        .split("")
+        .map((char) =>
+          shouldPreserveCharacter(char, {
+            preserveSpaces: true,
+            preserveNumbers: true,
+            preservePunctuation: true,
+          })
+            ? `[${char}]`
+            : char,
+        )
+        .join("")}
+    </pre>
   );
 }
